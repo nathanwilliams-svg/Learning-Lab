@@ -1,1 +1,77 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Nipher Interactive Learning Lab interactive middle school classroom activities"><title>Nipher Interactive Learning Lab</title><link rel="stylesheet" href="shared/lab.css"><style>.hero{background:linear-gradient(120deg,#18253d,#394563);color:white;border-radius:20px;padding:35px 28px;margin:12px 0 28px}.hero h1{color:white}.hero p{color:#e8edf7}.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:16px}.tile{border:1px solid #d9e1ec;background:white;border-radius:17px;padding:24px;color:#1b2a42;text-decoration:none;box-shadow:0 5px 18px #24334c0b;transition:transform .15s,border-color .15s}.tile:hover{border-color:#b92430;transform:translateY(-3px)}.tile .emoji{font-size:2.3rem;display:block;margin-bottom:15px}.tile b{font-size:1.17rem}.tile p{color:#51627b}.tag{color:#b92430;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:800}.play{font-weight:800;color:#a51e29}.info{font-size:.88rem;color:#51627b}</style></head><body><header><a href="./">🛡️ Nipher Interactive Learning Lab</a><span>Explore · Investigate · Improve</span></header><main><section class="hero"><span class="eyebrow" style="color:#ffb4bd">Welcome, Nipher Knights</span><h1>Your classroom learning lab</h1><p>Choose a course and launch an interactive challenge. No ChatGPT or Claude login required.</p><span class="pill" style="background:#fff;color:#17243c">5 classroom labs</span><span class="pill" style="background:#fff;color:#17243c">3 difficulty levels each</span></section><h2>Choose your class</h2><section class="tiles"><a class="tile" href="medical-mystery/"><span class="emoji">🩺</span><span class="tag">Medical Detectives</span><h2>Medical Mystery Simulator</h2><p>Interview patients, order tests, gather evidence, and solve fictional diagnostic mysteries.</p><span class="play">Open Medical Detectives →</span></a><a class="tile" href="robot-maze/"><span class="emoji">🤖</span><span class="tag">Robotics</span><h2>Robot Coding Maze</h2><p>Write movement commands, use loops, and debug your robot's journey through obstacles.</p><span class="play">Open Robotics →</span></a><a class="tile" href="engineering-studio/"><span class="emoji">🛠️</span><span class="tag">Engineering &amp; Design</span><h2>Engineering Design Studio</h2><p>Solve client problems, choose materials, stay within budget, test, and improve.</p><span class="play">Open Engineering →</span></a><a class="tile" href="python-lab/"><span class="emoji">🐍</span><span class="tag">Computer Science · Coding</span><h2>Python Coding Lab</h2><p>Learn Python with 132 guided missions in 22 units, worked examples, a live code runner, and progress tracking.</p><span class="play">Open Python Lab →</span></a><a class="tile" href="natural-synthetic/"><span class="emoji">⚗️</span><span class="tag">6th Grade Physical Science</span><h2>Natural vs. Synthetic Lab</h2><p>Investigate 61 materials using evidence about their source, manufacturing, and classification.</p><span class="play">Open Physical Science →</span></a></section><section class="card" style="margin-top:30px"><h2>How the learning labs work</h2><p>Choose Beginner, Intermediate, or Advanced. Follow the instructions, complete a challenge, and review feedback or a final score. Some labs offer printable results.</p><p class="info">These are classroom practice activities. Results and teacher settings are stored locally in the browser or not stored at all. Student accounts are not required. Answers and teacher controls in browser code are not secure assessments.</p></section></main><footer>Nipher Interactive Learning Lab · Red, white &amp; navy · Built for classroom practice</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Nipher middle school interactive classroom activities for robotics, engineering, medical detectives and physical science">
+<title>Nipher Interactive Learning Lab</title>
+<link rel="stylesheet" href="shared/lab.css">
+<style>
+.hero{background:linear-gradient(115deg,#18253d,#354563);color:white;border-radius:22px;padding:34px 30px;margin:10px 0 26px}
+.hero h1{color:#fff}.hero p{color:#e8eef9}.hero .eyebrow{color:#ffc5ca}
+.tabs{display:flex;gap:9px;overflow-x:auto;padding:3px 2px 12px;margin:12px 0;scrollbar-width:thin}
+.tab{flex:0 0 auto;white-space:nowrap;border:2px solid #cdd8e6;border-radius:13px;padding:13px 16px;min-height:52px;background:white;color:#17243c;font-weight:800}
+.tab[aria-selected="true"]{border-color:#b92430;background:#b92430;color:white}
+.tab:focus-visible,.tile:focus-visible{outline:3px solid #2867ad;outline-offset:3px}
+.panel[hidden]{display:none}
+.sectionhead{margin:18px 0}.sectionhead p{color:#51627b}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:17px}
+.tile{display:block;border:1px solid #d9e1ec;background:white;border-radius:17px;padding:24px;color:#1b2a42;text-decoration:none;box-shadow:0 5px 18px #24334c0b;transition:transform .15s,border-color .15s;min-height:245px}
+.tile:hover{border-color:#b92430;transform:translateY(-3px)}
+.tile .emoji{font-size:2.2rem;display:block;margin-bottom:11px}
+.tile h3{margin:6px 0 10px;font-size:1.2rem}
+.tile p{color:#51627b}
+.tag{color:#af2430;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+.play{font-weight:800;color:#af2430}
+.info{font-size:.88rem;color:#51627b}
+@media(max-width:600px){.hero{padding:24px 19px}.tab{padding:11px 12px}.tiles{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><a href="./">🛡️ Nipher Interactive Learning Lab</a><span>Explore · Investigate · Improve</span></header>
+<main>
+<section class="hero">
+<span class="eyebrow">Welcome, Nipher Knights</span>
+<h1>Choose your classroom lab</h1>
+<p>Interactive activities for all four classes. Choose a tab below to explore coding, engineering, science, and medical investigations.</p>
+<span class="pill" style="background:#fff;color:#17243c">4 class tabs</span>
+<span class="pill" style="background:#fff;color:#17243c">5 interactive apps</span>
+</section>
+<h2 id="choose-heading">Choose your class</h2>
+<div class="tabs" role="tablist" aria-label="Classroom subjects">
+<button class="tab" type="button" role="tab" id="tab-robotics" aria-controls="panel-robotics" aria-selected="true" tabindex="0" data-tab="robotics">🤖 Robotics</button>
+<button class="tab" type="button" role="tab" id="tab-engineering" aria-controls="panel-engineering" aria-selected="false" tabindex="-1" data-tab="engineering">🛠️ Engineering &amp; Design</button>
+<button class="tab" type="button" role="tab" id="tab-medical" aria-controls="panel-medical" aria-selected="false" tabindex="-1" data-tab="medical">🩺 Medical Detectives</button>
+<button class="tab" type="button" role="tab" id="tab-science" aria-controls="panel-science" aria-selected="false" tabindex="-1" data-tab="science">⚗️ 6th Grade Physical Science</button>
+</div>
+<section id="panel-robotics" class="panel" role="tabpanel" aria-labelledby="tab-robotics">
+<div class="sectionhead"><h2>🤖 Robotics</h2><p>Learn robot navigation, debugging, and Python programming.</p></div>
+<div class="tiles">
+<a class="tile" href="robot-maze/"><span class="emoji">🧭</span><span class="tag">Sequencing and loops</span><h3>Robot Coding Maze</h3><p>Write movement commands, repeat steps, debug your code, and reach a target.</p><span class="play">Launch Robot Coding Maze →</span></a>
+<a class="tile" href="python-lab/"><span class="emoji">🐍</span><span class="tag">Programming language</span><h3>Python Coding Lab</h3><p>132 guided missions in 22 units, with worked examples, explanations, debugging help, and a real Python runner.</p><span class="play">Launch Python Coding Lab →</span></a>
+</div></section>
+<section id="panel-engineering" class="panel" role="tabpanel" aria-labelledby="tab-engineering" hidden>
+<div class="sectionhead"><h2>🛠️ Engineering &amp; Design</h2><p>Design within constraints, test prototypes, and improve solutions.</p></div>
+<div class="tiles">
+<a class="tile" href="engineering-studio/"><span class="emoji">🏗️</span><span class="tag">Engineering design process</span><h3>Engineering Design Studio</h3><p>Work with fictional clients, plan materials and costs, run simulated tests, and iterate.</p><span class="play">Launch Engineering Studio →</span></a>
+</div></section>
+<section id="panel-medical" class="panel" role="tabpanel" aria-labelledby="tab-medical" hidden>
+<div class="sectionhead"><h2>🩺 Medical Detectives</h2><p>Investigate fictional patients using interviews, evidence, and test results.</p></div>
+<div class="tiles">
+<a class="tile" href="medical-mystery/"><span class="emoji">🔬</span><span class="tag">Patient investigations</span><h3>Medical Mystery Simulator</h3><p>Explore 12 fictional cases, choose diagnostic tests, and explain the evidence supporting a diagnosis.</p><span class="play">Launch Medical Mystery →</span></a>
+</div></section>
+<section id="panel-science" class="panel" role="tabpanel" aria-labelledby="tab-science" hidden>
+<div class="sectionhead"><h2>⚗️ 6th Grade Physical Science</h2><p>Use evidence to identify materials and investigate how they're made.</p></div>
+<div class="tiles">
+<a class="tile" href="natural-synthetic/"><span class="emoji">🧪</span><span class="tag">Matter and materials</span><h3>Natural vs. Synthetic Lab</h3><p>61 real-world examples with questions about the material's source, processing, and classification.</p><span class="play">Launch Materials Investigation →</span></a>
+</div></section>
+<section class="card" style="margin-top:28px"><h2>How the activities work</h2><p>Select your class, open an activity, choose a level, and follow the on-screen instructions. No ChatGPT account needed.</p><p class="info">These are classroom practice apps. Teacher controls are local to each browser and are not password-protected. Code answers may be visible to students in the page source. Python needs access to an external runtime on first use.</p></section>
+</main>
+<footer>Nipher Interactive Learning Lab · Red, white and navy · Middle school STEM</footer>
+<script>
+"use strict";
+const tabs=Array.from(document.querySelectorAll('[role="tab"]'));
+function selectTab(name,focus=false){const chosen=tabs.find(x=>x.dataset.tab===name)||tabs[0];for(const t of tabs){const on=t===chosen;t.setAttribute("aria-selected",String(on));t.tabIndex=on?0:-1;document.getElementById("panel-"+t.dataset.tab).hidden=!on;}if(focus)chosen.focus();if(history.replaceState)history.replaceState(null,"","#"+chosen.dataset.tab);}
+tabs.forEach((tab,i)=>{tab.addEventListener("click",()=>selectTab(tab.dataset.tab));tab.addEventListener("keydown",e=>{let next=i;if(e.key==="ArrowRight")next=(i+1)%tabs.length;else if(e.key==="ArrowLeft")next=(i+tabs.length-1)%tabs.length;else if(e.key==="Home")next=0;else if(e.key==="End")next=tabs.length-1;else return;e.preventDefault();selectTab(tabs[next].dataset.tab,true);});});
+selectTab(location.hash.slice(1));
+</script>
+</body></html>
