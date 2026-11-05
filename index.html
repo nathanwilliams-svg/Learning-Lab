@@ -25,7 +25,22 @@
 .info{font-size:.88rem;color:#51627b}
 @media(max-width:600px){.hero{padding:24px 19px}.tab{padding:11px 12px}.tiles{grid-template-columns:1fr}}
 </style>
-</head>
+<style>
+/* Learning Lab launchpad: decorative art, daily launch and interactive cards */
+.hero{position:relative;overflow:hidden;box-shadow:0 18px 38px #192b4627}
+.hero::after{content:"✦";position:absolute;right:8%;top:12%;font-size:104px;line-height:1;color:#ffffff16;pointer-events:none;animation:hub-shimmer 5s ease-in-out infinite}
+.hero::before{content:"⚙  ⚗  ✧";position:absolute;right:7%;bottom:9%;font-size:32px;color:#ffffff26;pointer-events:none;transform:rotate(-12deg)}
+.tiles .tile{position:relative;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.tiles .tile::after{content:"✦";position:absolute;right:15px;top:5px;font-size:43px;color:#c2cede33;pointer-events:none}
+.tiles .tile:hover{transform:translateY(-4px);box-shadow:0 17px 30px #19294221}
+.tiles .emoji{display:inline-grid;place-items:center;width:65px;height:65px;border-radius:17px;background:linear-gradient(135deg,#fff1f1,#eaf0f9);border:1px solid #d9e3ee;box-shadow:inset 0 1px 6px #fff;animation:hub-float 4s ease-in-out infinite}
+#featured-challenge{border-radius:18px;border:1px solid #f0d7a0;padding:19px;margin:22px 0;background:linear-gradient(105deg,#fff6df,#fff)}
+#featured-challenge h2{margin:0}
+#featured-challenge .btn{background:#a53037;color:#fff;border-color:#a53037;text-decoration:none}
+@keyframes hub-shimmer{50%{transform:rotate(18deg);opacity:.35}}
+@keyframes hub-float{50%{transform:translateY(-4px)}}
+@media(prefers-reduced-motion:reduce){.hero::after,.tiles .emoji{animation:none}}
+</style></head>
 <body>
 <header><a href="./">🛡️ Nipher Interactive Learning Lab</a><span>Explore · Investigate · Improve</span></header>
 <main>
@@ -36,7 +51,7 @@
 <span class="pill" style="background:#fff;color:#17243c">4 class tabs</span>
 <span class="pill" style="background:#fff;color:#17243c">13 interactive apps</span>
 </section>
-<h2 id="choose-heading">Choose your class</h2>
+<section id="featured-challenge" aria-label="Featured mission"><div class="row" style="justify-content:space-between;gap:15px"><div><span class="tag">⭐ Mission of the day</span><h2 id="featured-title">Pick a challenge</h2><p id="featured-text" class="muted">Explore a different classroom simulation today.</p></div><a class="btn" id="featured-link" href="robot-maze/">Play featured mission</a></div></section><h2 id="choose-heading">Choose your class</h2>
 <div class="tabs" role="tablist" aria-label="Classroom subjects">
 <button class="tab" type="button" role="tab" id="tab-robotics" aria-controls="panel-robotics" aria-selected="true" tabindex="0" data-tab="robotics">🤖 Robotics</button>
 <button class="tab" type="button" role="tab" id="tab-engineering" aria-controls="panel-engineering" aria-selected="false" tabindex="-1" data-tab="engineering">🛠️ Engineering &amp; Design</button>
@@ -80,6 +95,7 @@
 const tabs=Array.from(document.querySelectorAll('[role="tab"]'));
 function selectTab(name,focus=false){const chosen=tabs.find(x=>x.dataset.tab===name)||tabs[0];for(const t of tabs){const on=t===chosen;t.setAttribute("aria-selected",String(on));t.tabIndex=on?0:-1;document.getElementById("panel-"+t.dataset.tab).hidden=!on;}if(focus)chosen.focus();if(history.replaceState)history.replaceState(null,"","#"+chosen.dataset.tab);}
 tabs.forEach((tab,i)=>{tab.addEventListener("click",()=>selectTab(tab.dataset.tab));tab.addEventListener("keydown",e=>{let next=i;if(e.key==="ArrowRight")next=(i+1)%tabs.length;else if(e.key==="ArrowLeft")next=(i+tabs.length-1)%tabs.length;else if(e.key==="Home")next=0;else if(e.key==="End")next=tabs.length-1;else return;e.preventDefault();selectTab(tabs[next].dataset.tab,true);});});
+const featured=[["Robot Coding Maze","robot-maze/","Debug a robot mission."],["Python Coding Lab","python-lab/","Learn a new Python command."],["Gear Ratio Simulator","gear-ratio/","Find the right gear ratio."],["Robot Sensor Challenge","robot-sensors/","Build an IF–THEN robot rule."],["Bridge Builder Challenge","bridge-builder/","Design a stronger bridge."],["Crane & Pulley Lab","crane-pulleys/","Find the ideal mechanical advantage."],["Outbreak Investigator","outbreak-investigator/","Follow an outbreak clue."],["Vital Signs Investigator","vital-signs/","Study patient evidence."],["Medical Mystery Simulator","medical-mystery/","Solve a fictional medical mystery."],["Natural vs. Synthetic Lab","natural-synthetic/","Investigate real-world materials."],["Change Detective","change-detective/","Find evidence of a new substance."],["Conservation of Mass Lab","conservation-mass/","Account for all the atoms."],["Engineering Design Studio","engineering-studio/","Prototype and improve a design."]];const dayNumber=Math.floor(new Date().setHours(0,0,0,0)/86400000);const todayMission=featured[((dayNumber%featured.length)+featured.length)%featured.length];document.getElementById("featured-title").textContent=todayMission[0];document.getElementById("featured-text").textContent=todayMission[2];document.getElementById("featured-link").href=todayMission[1];
 selectTab(location.hash.slice(1));
 </script>
 </body></html>
