@@ -23,4 +23,4 @@ function report(score){const c=current;app.innerHTML=Lab.heading("Design review"
 function teacher(){app.innerHTML=Lab.heading("Teacher controls","Engineering Design Studio","Each challenge uses simplified performance points for decision-making practice, not engineering certification.")+'<div class="card"><p>Available challenges: '+CHALLENGES.length+' across three levels. Students plan, budget, test and iterate.</p><label><input id="hints" type="checkbox" '+(settings.hints?"checked":"")+'> Enable design prompts</label><button class="primary" onclick="saveTeacher()">Save settings</button> <button onclick="menu()">Cancel</button></div>'}
 function saveTeacher(){settings.hints=document.getElementById("hints").checked;Lab.save(key,settings);menu()}
 menu();
-</script><script src="../shared/game-layer.js"></script></body></html>
+</script><script src="../shared/game-layer.js"></script><script src="../shared/guide.js"></script></body></html>

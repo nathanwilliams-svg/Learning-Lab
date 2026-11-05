@@ -19,4 +19,4 @@ function report(score){app.innerHTML=Lab.heading("Robotics","Maze complete!","Yo
 function teacher(){app.innerHTML=Lab.heading("Teacher controls","Robot Coding Maze","Settings are local to this browser. These challenges use a simplified grid, not real-world robot physics.")+'<div class="card"><label for="max">Maximum executed commands</label><select id="max">'+[20,30,45,60,100].map(n=>'<option value="'+n+'" '+(settings.maxSteps===n?"selected":"")+'>'+n+'</option>').join("")+'</select><label><input type="checkbox" id="hints" '+(settings.hints?"checked":"")+'> Allow hints</label><p><button class="primary" onclick="saveTeacher()">Save settings</button> <button onclick="menu()">Cancel</button></p></div>'}
 function saveTeacher(){settings={maxSteps:Number(document.getElementById("max").value),hints:document.getElementById("hints").checked};Lab.save(settingsKey,settings);menu()}
 menu();
-</script><script src="../shared/game-layer.js"></script></body></html>
+</script><script src="../shared/game-layer.js"></script><script src="../shared/guide.js"></script></body></html>
