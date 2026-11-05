@@ -14,7 +14,17 @@ const apps={
 "vital-signs":["medical","💓","Pulse Pal","Study fictional vital signs in context."],
 "natural-synthetic":["science","🧪","Professor Atom","Investigate how familiar materials are made."],
 "change-detective":["science","⚗️","Molecule Max","Investigate whether a new substance formed."],
-"conservation-mass":["science","⚖️","Atom Ace","Track every atom and account for the missing mass."]
+"conservation-mass":["science","⚖️","Atom Ace","Track every atom and account for the missing mass."],
+"robot-troubleshoot":["robotics","🔧","Fix-It Fran","Find the real cause before you fix the robot."],
+"drivetrain-designer":["robotics","🏎️","Torque Tess","Balance speed and pushing power for your robot."],
+"wind-turbine":["engineering","🌬️","Breezy","Catch the wind and turn it into power."],
+"print-checker":["engineering","🖨️","Layer Lou","Catch print problems before they waste filament."],
+"thermal-lab":["science","🌡️","Thermo","Slow down the flow of thermal energy."],
+"experiment-design":["science","🧪","Variable Val","Change one thing at a time and let the data decide."],
+"mystery-substance":["science","🔎","Sherlock Sample","Use properties as clues to name the unknown."],
+"ramp-motion":["science","🛝","Rolling Rae","Measure motion and test what changes it."],
+"brain-detective":["medical","🧠","Dr. Neuron","Match each symptom to the part of the brain behind it."],
+"micro-lab":["medical","🧫","Petri Pete","Grow microbes safely and run fair experiments."]
 };
 const cfg=apps[id],main=document.querySelector("main");if(!cfg||!main)return;
 const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
