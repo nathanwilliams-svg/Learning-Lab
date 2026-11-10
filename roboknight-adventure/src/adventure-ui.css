@@ -40,3 +40,16 @@
 .quest-art-status{position:absolute;right:74px;top:14px;color:#eaf6ff;font-size:12px;font-weight:700;background:#183961;border:1px solid #709eca;border-radius:10px;padding:5px 9px;z-index:4;max-width:42%;white-space:normal}
 .quest-art-status.error{background:#7c2835;border-color:#f4adb8}.quest-art-status[hidden]{display:none!important}
 @media(max-width:600px){.quest-art-status{top:48px;right:7px;font-size:10px;max-width:75%}}
+
+/* Reliable real Start Mission control on illustrated briefing, including touch devices. */
+.art-briefing-ready[data-view="brief"][data-mission="0"] .quest-brief-content>.quest-btn{
+ display:flex!important;align-items:center;justify-content:center;
+ position:absolute;left:33%;top:auto;bottom:4%;width:34%;height:auto;min-height:56px;
+ padding:12px 14px;opacity:1!important;z-index:30;pointer-events:auto!important;
+ background:linear-gradient(#70ff9e,#0dac45 58%,#087d36)!important;
+ border:3px solid #d7ffe6!important;box-shadow:0 4px 0 #086b36,0 5px 20px #001c23a8!important;
+ color:white!important;text-align:center;font-size:clamp(15px,2vw,23px)!important;
+ text-shadow:0 2px 2px #165836!important;
+}
+.art-briefing-ready[data-view="brief"][data-mission="0"] .quest-brief-content>.quest-btn:focus-visible{outline:4px solid #fff;outline-offset:3px}
+@media(max-width:600px){.art-briefing-ready[data-view="brief"][data-mission="0"] .quest-brief-content>.quest-btn{min-height:38px;padding:5px;font-size:13px!important;bottom:3%}}
