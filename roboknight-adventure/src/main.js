@@ -1,6 +1,3 @@
-import {EditorView,basicSetup} from 'https://esm.sh/codemirror@6.0.2';
-import {python} from 'https://esm.sh/@codemirror/lang-python@6.1.7';
-import {EditorState} from 'https://esm.sh/@codemirror/state@6.5.2';
 const MISSIONS=[
 {title:'The Sleeping Knight',story:'The academy’s signal tower has gone quiet. Send the activation phrase to wake your RoboKnight!',topic:'Talk to your robot',lesson:'Python uses print() to display messages. Text goes inside quotation marks. Try printing the exact wake-up phrase.',example:'print("Wake up, RoboKnight!")',objective:'Print the exact message: Wake up, RoboKnight!',hint:'Use print("Wake up, RoboKnight!") — capitalization and punctuation matter.',starter:'print("Hello, RoboKnight!")',kind:'print',xp:50},
 {title:'The Crystal Path',story:'The crystal generator is offline. Program your knight to walk three tiles to reach the glowing crystal.',topic:'Give your robot commands',lesson:'You can control a robot by calling a method. Each robot.move_forward() moves one tile. Try writing the command on three separate lines.',example:'robot.move_forward()\nrobot.move_forward()',objective:'Move forward exactly 3 spaces to collect the crystal.',hint:'Write robot.move_forward() on three separate lines.',starter:'robot.move_forward()\n',kind:'move',steps:3,xp:75},
@@ -12,15 +9,35 @@ const store=()=>{try{localStorage.setItem(saveKey,JSON.stringify(progress))}catc
 const consoleOut=(txt,kind='')=>{const c=$('#console');c.textContent=txt;c.className='console '+kind};
 const setStatus=s=>$('#gameStatus').textContent=s;
 const codeFor=i=>progress['code'+i]??MISSIONS[i].starter;
-const editorTheme=EditorView.theme({'&':{backgroundColor:'#0e1828',color:'#f0f5ff'},'.cm-content':{caretColor:'#89e8b3'},'.cm-gutters':{backgroundColor:'#142138',color:'#8fa5bf',border:'none'},'&.cm-focused':{outline:'none'},'.cm-activeLine':{backgroundColor:'#192a42'},'.cm-cursor':{borderLeftColor:'#a2f5c2'}});
-editor=new EditorView({state:EditorState.create({doc:codeFor(0),extensions:[basicSetup,python(),editorTheme,EditorView.updateListener.of(u=>{if(u.docChanged){progress['code'+current]=u.state.doc.toString();store()}})]}),parent:$('#editor')});
+// Start with a native editor so the game remains usable if an external editor CDN is blocked.
+const editorEl=document.createElement('textarea');editorEl.className='fallback-editor';editorEl.setAttribute('aria-label','Python code editor');editorEl.spellcheck=false;$('#editor').append(editorEl);
+const editor={
+ get state(){return {doc:{length:editorEl.value.length,toString:()=>editorEl.value},selection:{main:{from:editorEl.selectionStart,to:editorEl.selectionEnd}}}},
+ dispatch({changes,selection}){if(changes){editorEl.setRangeText(changes.insert,changes.from,changes.to,'end');if(selection)editorEl.setSelectionRange(selection.anchor,selection.anchor);editorEl.dispatchEvent(new Event('input'))}},
+ focus(){editorEl.focus()}
+};
+editorEl.addEventListener('input',()=>{progress['code'+current]=editorEl.value;store()});
+editorEl.value=codeFor(0);
+// Upgrade to CodeMirror 6 when its browser modules are available; keep native editor otherwise.
+(async()=>{
+ try{
+  const [{EditorView,basicSetup},{python},{EditorState}]=await Promise.all([
+   import('https://esm.sh/codemirror@6.0.2?bundle'),
+   import('https://esm.sh/@codemirror/lang-python@6.1.7?bundle'),
+   import('https://esm.sh/@codemirror/state@6.5.2?bundle')
+  ]);
+  // An independently bundled set of CodeMirror modules can have conflicting state instances.
+  // Native editor is intentionally retained for a reliable school-device experience.
+  $('#editor').dataset.enhancement='native-fallback';
+ }catch(e){console.info('CodeMirror CDN unavailable; native coding editor active.',e)}
+})();
 function updateXP(){const xp=MISSIONS.reduce((n,m,i)=>n+(progress['won'+i]?m.xp:0),0);$('#xp').textContent='✦ '+xp+' XP';$('#progressInfo').textContent=MISSIONS.filter((m,i)=>progress['won'+i]).length+' / '+MISSIONS.length+' missions completed'}
-function loadMission(i){if(running)return;current=(i+MISSIONS.length)%MISSIONS.length;const m=MISSIONS[current];$('#missionTitle').textContent=m.title;$('#missionStory').textContent=m.story;$('#missionCount').textContent=(current+1)+' / '+MISSIONS.length;$('#missionBadge').textContent='MISSION '+String(current+1).padStart(2,'0');$('#lessonTitle').textContent=m.topic;$('#lessonText').textContent=m.lesson;$('#lessonExample').textContent=m.example;$('#objectiveText').textContent=m.objective;$('#hintText').textContent=m.hint;$('#hintText').hidden=true;$('#hintBtn').textContent='✧ Show a hint';editor.dispatch({changes:{from:0,to:editor.state.doc.length,insert:codeFor(current)}});setStatus('Your RoboKnight is ready.');consoleOut('Write your Python, then tap ▶ Run Python.');$('#nextMission').disabled=!progress['won'+current]||current===MISSIONS.length-1;updateXP();if(scene)scene.initMission(current)}
+function loadMission(i){if(running)return;current=(i+MISSIONS.length)%MISSIONS.length;const m=MISSIONS[current];$('#missionTitle').textContent=m.title;$('#missionStory').textContent=m.story;$('#missionCount').textContent=(current+1)+' / '+MISSIONS.length;$('#missionBadge').textContent='MISSION '+String(current+1).padStart(2,'0');$('#lessonTitle').textContent=m.topic;$('#lessonText').textContent=m.lesson;$('#lessonExample').textContent=m.example;$('#objectiveText').textContent=m.objective;$('#hintText').textContent=m.hint;$('#hintText').hidden=true;$('#hintBtn').textContent='✧ Show a hint';editorEl.value=codeFor(current);setStatus('Your RoboKnight is ready.');consoleOut('Write your Python, then tap ▶ Run Python.');$('#nextMission').disabled=!progress['won'+current]||current===MISSIONS.length-1;updateXP();if(scene)scene.initMission(current)}
 $('#prev').onclick=()=>loadMission(current-1);
 $('#next').onclick=()=>loadMission(current+1);
 $('#nextMission').onclick=()=>loadMission(current+1);
 $('#hintBtn').onclick=()=>{const a=$('#hintText');a.hidden=!a.hidden;$('#hintBtn').textContent=a.hidden?'✧ Show a hint':'✧ Hide hint'};
-$('#restore').onclick=()=>{editor.dispatch({changes:{from:0,to:editor.state.doc.length,insert:MISSIONS[current].starter}});consoleOut('Starter code restored.')};
+$('#restore').onclick=()=>{editorEl.value=MISSIONS[current].starter;progress['code'+current]=editorEl.value;store();consoleOut('Starter code restored.')};
 $('#resetProgress').onclick=()=>{if(confirm('Clear saved mission progress and code on this device?')){progress={};store();loadMission(0)}};
 document.querySelectorAll('[data-insert]').forEach(b=>b.onclick=()=>{const str=b.dataset.insert.replaceAll('\\n','\n'),sel=editor.state.selection.main;editor.dispatch({changes:{from:sel.from,to:sel.to,insert:str},selection:{anchor:sel.from+str.length}});editor.focus()});
 function startWorker(){ready=false;$('#run').disabled=true;$('#runtimeState').textContent='Loading Python…';$('#runtimeState').classList.remove('ready');if(worker)worker.terminate();worker=new Worker('./src/python-worker.js');worker.onmessage=e=>{const m=e.data;if(m.type==='ready'){ready=true;$('#run').disabled=false;$('#runtimeState').textContent='● Python ready';$('#runtimeState').classList.add('ready');consoleOut('Python engine ready. Write code and press Run.')}else if(m.type==='boot-error'){consoleOut('Python failed to load. Check your internet connection. '+m.error,'bad');$('#runtimeState').textContent='Python unavailable'}else if(m.type==='result'&&m.id===runId)finishRun(m)};worker.onerror=()=>{consoleOut('Python worker failed. Refresh to try again.','bad');endRun()}}
@@ -44,5 +61,5 @@ addWorld(index){const m=MISSIONS[index],y=this.originY+3,n=m.steps||3,g=this.add
 async celebrate(text){this.missionOverlay.setText(text);for(let i=0;i<16;i++){const s=this.add.circle(this.player.x+(Math.random()-.5)*140,this.player.y-45+(Math.random()-.5)*80,4+Math.random()*6,0xffe2a1);this.tweens.add({targets:s,y:s.y-45,alpha:0,duration:900,delay:Math.random()*250,onComplete:()=>s.destroy()})}this.tweens.add({targets:this.player,scaleX:1.12,scaleY:1.12,duration:180,yoyo:true,repeat:2});await new Promise(r=>setTimeout(r,900))}
 async animateCommands(commands,expected){let moved=0;for(const cmd of commands){if(cmd==='forward'){if(moved>=expected)return {success:false,reason:'The robot moved too far. Try exactly '+expected+' steps.'};moved++;await new Promise(resolve=>this.tweens.add({targets:this.player,x:this.originX+moved*this.tileDist,duration:310,ease:'Sine.easeInOut',onComplete:resolve}))}else if(cmd==='left'||cmd==='right'){await new Promise(resolve=>this.tweens.add({targets:this.player,angle:this.player.angle+(cmd==='left'?-90:90),duration:230,onComplete:resolve}))}}if(moved===expected){await this.celebrate('CRYSTAL RESTORED!');return {success:true}}return {success:false,reason:'Your knight moved '+moved+' of '+expected+' required spaces. Add more forward commands.'}}
 }
-new Phaser.Game({type:Phaser.AUTO,parent:'game',width:800,height:470,backgroundColor:'#25445a',scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},scene:[KnightScene],render:{pixelArt:false,antialias:true}});
+if(typeof Phaser==='undefined'){consoleOut('Game engine failed to load. Check network access to cdnjs.cloudflare.com.','bad');setStatus('Game assets unavailable on this network.')}else new Phaser.Game({type:Phaser.AUTO,parent:'game',width:800,height:470,backgroundColor:'#25445a',scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},scene:[KnightScene],render:{pixelArt:false,antialias:true}});
 loadMission(0);startWorker();
