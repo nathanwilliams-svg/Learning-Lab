@@ -63,3 +63,14 @@ These checks do not constitute physical iPad, live GitHub Pages, Phaser renderin
 
 ### Remaining visual limitations
 The forest gameplay background is cropped from an illustration, while the moving RoboKnight remains a separate vector asset. Full high-resolution walk-cycle sprite sheets, individually layered environment tiles, and production audio are not yet integrated. The editor currently uses a robust native textarea; CodeMirror loading is attempted but it is not yet used for rendering the editor.
+
+## Illustrated gameplay assets (November 2026)
+
+The Phaser scene now prefers two optional production images:
+
+- `assets/illustrated/academy-level.webp`: a full-scene illustrated background with the stationary character removed
+- `assets/illustrated/roboknight-character.png`: a separate transparent knight for movement
+
+These are provided in `RoboKnight_Gameplay_Art_Upgrade.zip` from this ChatGPT conversation. Extract the archive and upload the **two image files** into `roboknight-adventure/assets/illustrated/` through GitHub's Add file > Upload files interface. The game will then use them automatically; no HTML edits are needed. Existing `gameplay.webp` and `knight.svg` are fallbacks if the files have not yet been uploaded.
+
+The stage no longer overlays large primitive tile rectangles. It uses a full illustrated scene, subtle waypoints, a separately animated knight, and victory particles. The generated art is still a static illustration rather than a full walking sprite sheet. Test the deployed result on a desktop browser and iPad before sharing it with students.
