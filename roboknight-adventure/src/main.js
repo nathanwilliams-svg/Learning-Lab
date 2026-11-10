@@ -33,6 +33,7 @@ editorEl.value=codeFor(0);
 })();
 function updateXP(){const xp=MISSIONS.reduce((n,m,i)=>n+(progress['won'+i]?m.xp:0),0);$('#xp').textContent='✦ '+xp+' XP';$('#progressInfo').textContent=MISSIONS.filter((m,i)=>progress['won'+i]).length+' / '+MISSIONS.length+' missions completed'}
 function loadMission(i){if(running)return;current=(i+MISSIONS.length)%MISSIONS.length;const m=MISSIONS[current];$('#missionTitle').textContent=m.title;$('#missionStory').textContent=m.story;$('#missionCount').textContent=(current+1)+' / '+MISSIONS.length;$('#missionBadge').textContent='MISSION '+String(current+1).padStart(2,'0');$('#lessonTitle').textContent=m.topic;$('#lessonText').textContent=m.lesson;$('#lessonExample').textContent=m.example;$('#objectiveText').textContent=m.objective;$('#hintText').textContent=m.hint;$('#hintText').hidden=true;$('#hintBtn').textContent='✧ Show a hint';editorEl.value=codeFor(current);setStatus('Your RoboKnight is ready.');consoleOut('Write your Python, then tap ▶ Run Python.');$('#nextMission').disabled=!progress['won'+current]||current===MISSIONS.length-1;updateXP();if(scene)scene.initMission(current)}
+window.RoboKnightGame={selectMission:(i)=>loadMission(i),getCurrentMission:()=>current};
 $('#prev').onclick=()=>loadMission(current-1);
 $('#next').onclick=()=>loadMission(current+1);
 $('#nextMission').onclick=()=>loadMission(current+1);
@@ -49,7 +50,7 @@ if(m.kind==='print'){if(msg.output.includes('Wake up, RoboKnight!')){await scene
 const commands=Array.from(msg.commands||[]);if(commands.length>120){consoleOut('Too many robot commands.','bad');return}
 const result=await scene.animateCommands(commands,m.steps);
 if(result.success){if(m.kind==='loop'&&!/\bfor\b|\bwhile\b/.test(editor.state.doc.toString())){consoleOut('You crossed, but this mission asks you to use a Python loop. Try a for loop!','bad');setStatus('A loop is needed to earn the crystal.');return}complete('Great code! Your RoboKnight reached the target.\n\n'+(msg.output||'All commands executed.'))}else{consoleOut(result.reason+'\n\nYour Python ran successfully. Try adjusting the instructions.\n'+msg.output,'bad');setStatus('Try debugging your commands.')}}
-function complete(text){const wasWon=!!progress['won'+current];progress['won'+current]=true;store();updateXP();$('#nextMission').disabled=current===MISSIONS.length-1;consoleOut(text+(wasWon?'':'\n\n✦ New XP earned!'),'good');setStatus('★ Mission complete! Outstanding coding!')}
+function complete(text){const wasWon=!!progress['won'+current];progress['won'+current]=true;store();updateXP();window.dispatchEvent(new CustomEvent('roboknight:completed',{detail:{index:current,first:!wasWon}}));$('#nextMission').disabled=current===MISSIONS.length-1;consoleOut(text+(wasWon?'':'\n\n✦ New XP earned!'),'good');setStatus('★ Mission complete! Outstanding coding!')}
 class KnightScene extends Phaser.Scene{
 constructor(){super('KnightScene')}
 preload(){this.load.svg('academyArt','./assets/academy.svg',{width:960,height:560});this.load.svg('knightArt','./assets/knight.svg',{width:192,height:240})}
