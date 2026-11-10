@@ -52,28 +52,125 @@ const commands=Array.from(msg.commands||[]);if(commands.length>120){consoleOut('
 let result;animationBusy=true;try{result=await scene.animateCommands(commands,m.steps)}catch(err){consoleOut('Animation error: '+String(err),'bad');setStatus('The robot could not animate. Please retry.');return}finally{animationBusy=false}
 if(result.success){if(m.kind==='loop'&&!/\bfor\b|\bwhile\b/.test(editor.state.doc.toString())){consoleOut('You crossed, but this mission asks you to use a Python loop. Try a for loop!','bad');setStatus('A loop is needed to earn the crystal.');return}complete('Great code! Your RoboKnight reached the target.\n\n'+(msg.output||'All commands executed.'))}else{consoleOut(result.reason+'\n\nYour Python ran successfully. Try adjusting the instructions.\n'+msg.output,'bad');setStatus('Try debugging your commands.')}}
 function complete(text){const wasWon=!!progress['won'+current];progress['won'+current]=true;store();updateXP();$('#next').disabled=current===MISSIONS.length-1;window.dispatchEvent(new CustomEvent('roboknight:completed',{detail:{index:current,first:!wasWon}}));$('#nextMission').disabled=current===MISSIONS.length-1;consoleOut(text+(wasWon?'':'\n\n✦ New XP earned!'),'good');setStatus('★ Mission complete! Outstanding coding!')}
-class KnightScene extends (window.Phaser?.Scene || class {}){
-constructor(){super('KnightScene')}
-preload(){this.load.svg('academyArt','./assets/academy.svg',{width:960,height:560});this.load.svg('knightArt','./assets/knight.svg',{width:192,height:240});this.load.image('forestGameplay','./assets/illustrated/gameplay.webp')}
-create(){scene=this;this.add.rectangle(400,235,800,470,0x29566b).setDepth(-4);
-this.academyBackground=this.textures.exists('academyArt')?this.add.image(400,235,'academyArt').setDisplaySize(800,470).setDepth(-3):null;
-this.forestBackground=null;
-if(this.textures.exists('forestGameplay')){
- const source=this.textures.get('forestGameplay').getSourceImage();
- // Crop scenery from the top of the original illustration, avoiding its baked code interface and character.
- const w=Math.min(source.width*.51,source.width),h=Math.min(source.height*.35,source.height);
- this.forestBackground=this.add.image(400,235,'forestGameplay')
-   .setCrop(0,source.height*.16,w,h).setDisplaySize(800,470).setDepth(-2).setVisible(false);
-}
-// Foreground uses the illustrated academy SVG, not a placeholder tile grid.
-// Illustrated background replaces placeholder triangle trees.
-this.stage=this.add.container(0,0);this.createKnight();this.missionOverlay=this.add.text(400,25,'',{fontFamily:'Arial',fontSize:'22px',fontStyle:'bold',color:'#fff8dd',stroke:'#1a3151',strokeThickness:5}).setOrigin(.5).setDepth(12);this.initMission(current)}
-createKnight(){this.player=this.add.container(0,0).setDepth(8);if(this.textures.exists('knightArt')){this.player.add(this.add.image(0,-20,'knightArt').setDisplaySize(118,146));}else{this.player.add(this.add.rectangle(0,-20,60,90,0xeeeeee));this.player.add(this.add.text(0,-30,'N',{fontSize:'26px',color:'#c33a4e'}).setOrigin(.5));}}
 
-initMission(index){if(!this.stage||!this.player)return;this.tweens.killTweensOf(this.player);this.stage.removeAll(true);this.missionOverlay.setText('');if(this.academyBackground)this.academyBackground.setVisible(index===0||!this.forestBackground);if(this.forestBackground)this.forestBackground.setVisible(index!==0);const m=MISSIONS[index];this.originX=m.kind==='print'?220:170;this.originY=280;this.tileDist=95;this.player.setPosition(this.originX,this.originY);this.player.setScale(1);this.player.setAngle(0);this.addWorld(index)}
-addWorld(index){const m=MISSIONS[index],y=this.originY+3,n=m.steps||3,g=this.add.graphics();if(index===0){g.fillStyle(0x344b70);g.fillRoundedRect(110,340,550,80,20);g.lineStyle(4,0xb5becd);g.strokeRoundedRect(110,340,550,80,20);this.stage.add(this.add.text(400,370,'THE KNIGHT ACADEMY',{fontFamily:'Arial',fontSize:'22px',fontStyle:'bold',color:'#fbe7bd'}).setOrigin(.5));const sig=this.add.circle(545,180,38,0x43566f).setStrokeStyle(6,0xe0b969);this.stage.add(sig);this.stage.add(this.add.text(545,180,'✦',{fontSize:'39px',color:'#ffe296'}).setOrigin(.5));this.stage.add(this.add.text(545,241,'SIGNAL TOWER',{fontSize:'15px',color:'#f8e4bc'}).setOrigin(.5));this.tweens.add({targets:sig,alpha:{from:.55,to:1},duration:800,yoyo:true,repeat:-1})}else{g.fillStyle(index===2?0x263955:0x245c79,this.forestBackground?0.48:0.75);g.fillRoundedRect(100,215,590,151,12);for(let i=0;i<=n;i++){const x=170+i*this.tileDist;this.stage.add(this.add.rectangle(x,y+24,86,84,index===2?0x7887a2:0xcda96c).setStrokeStyle(5,index===2?0xd5ecf5:0xf9e4af));this.stage.add(this.add.line(0,0,x-37,y-2,x+37,y-2,0xffedc5,.5))}const end=170+n*this.tileDist;this.stage.add(this.add.circle(end,y-42,21,0x6ef4dd,.2));const gem=this.add.triangle(end,y-43,0,25,17,0,34,25,0x80f8d4).setStrokeStyle(3,0xd9fff4);this.stage.add(gem);this.tweens.add({targets:gem,y:y-52,yoyo:true,duration:900,repeat:-1});this.stage.add(this.add.text(380,420,index===1?'CRYSTAL PATH':'THE BRIDGE OF LOOPS',{fontFamily:'Arial',fontSize:'23px',color:'#ffe7b5',fontStyle:'bold'}).setOrigin(.5))}this.stage.add(g)}
-async celebrate(text){this.missionOverlay.setText(text);for(let i=0;i<16;i++){const s=this.add.circle(this.player.x+(Math.random()-.5)*140,this.player.y-45+(Math.random()-.5)*80,4+Math.random()*6,0xffe2a1);this.tweens.add({targets:s,y:s.y-45,alpha:0,duration:900,delay:Math.random()*250,onComplete:()=>s.destroy()})}this.tweens.add({targets:this.player,scaleX:1.12,scaleY:1.12,duration:180,yoyo:true,repeat:2});await new Promise(r=>setTimeout(r,900))}
-async animateCommands(commands,expected){let moved=0;for(const cmd of commands){if(cmd==='forward'){if(moved>=expected)return {success:false,reason:'The robot moved too far. Try exactly '+expected+' steps.'};moved++;await new Promise(resolve=>this.tweens.add({targets:this.player,x:this.originX+moved*this.tileDist,duration:310,ease:'Sine.easeInOut',onComplete:resolve}))}else if(cmd==='left'||cmd==='right'){await new Promise(resolve=>this.tweens.add({targets:this.player,angle:this.player.angle+(cmd==='left'?-90:90),duration:230,onComplete:resolve}))}}if(moved===expected){await this.celebrate('CRYSTAL RESTORED!');return {success:true}}return {success:false,reason:'Your knight moved '+moved+' of '+expected+' required spaces. Add more forward commands.'}}
+class KnightScene extends (window.Phaser?.Scene || class {}){
+ constructor(){super('KnightScene');this.artReady=false;this.heroReady=false;this.waypointEffects=[]}
+ preload(){
+  this.load.svg('academyArt','./assets/academy.svg',{width:960,height:560});
+  this.load.svg('knightArt','./assets/knight.svg',{width:192,height:240});
+  this.load.image('forestGameplay','./assets/illustrated/gameplay.webp');
+  // Optional polished layered assets, supplied in the prepared art pack.
+  this.load.image('academyLevel','./assets/illustrated/academy-level.webp');
+  this.load.image('heroKnight','./assets/illustrated/roboknight-character.png');
+ }
+ create(){
+  scene=this;
+  this.add.rectangle(400,235,800,470,0x102f55).setDepth(-10);
+  this.oldBackground=this.textures.exists('academyArt')
+    ?this.add.image(400,235,'academyArt').setDisplaySize(800,470).setDepth(-9):null;
+  this.illustratedBackground=null;
+  const imageKey=this.textures.exists('academyLevel')?'academyLevel':
+    this.textures.exists('forestGameplay')?'forestGameplay':null;
+  if(imageKey){
+   this.illustratedBackground=this.add.image(400,235,imageKey).setDepth(-8);
+   if(imageKey==='forestGameplay'){
+    const source=this.textures.get(imageKey).getSourceImage();
+    const x=Math.round(source.width*.011),y=Math.round(source.height*.132);
+    const w=Math.round(source.width*.533),h=Math.round(source.height*.656);
+    this.illustratedBackground.setCrop(x,y,w,h);
+   }
+   this.illustratedBackground.setDisplaySize(800,470);
+   this.artReady=true;
+   if(this.oldBackground)this.oldBackground.setVisible(false);
+  }
+  this.stage=this.add.container(0,0).setDepth(3);
+  this.createKnight();
+  this.missionOverlay=this.add.text(400,36,'',{
+   fontFamily:'Arial',fontSize:'22px',fontStyle:'bold',color:'#fff9d6',
+   backgroundColor:'#102b56cc',padding:{x:12,y:7},stroke:'#0a264d',strokeThickness:4
+  }).setOrigin(.5).setDepth(12);
+  this.initMission(current);
+ }
+ createKnight(){
+  this.player=this.add.container(0,0).setDepth(9);
+  this.heroReady=this.textures.exists('heroKnight');
+  if(this.heroReady){
+   this.bodySprite=this.add.image(0,-70,'heroKnight').setDisplaySize(125,166);
+  }else if(this.textures.exists('knightArt')){
+   this.bodySprite=this.add.image(0,-62,'knightArt').setDisplaySize(120,150);
+  }else{
+   this.bodySprite=this.add.rectangle(0,-48,70,100,0xeaeff8);
+   this.player.add(this.add.text(0,-65,'N',{fontSize:'26px',color:'#ba2f45'}).setOrigin(.5));
+  }
+  this.player.add(this.add.ellipse(0,0,102,16,0x061729,.32).setDepth(-1));
+  this.player.add(this.bodySprite);
+  this.tweens.add({targets:this.bodySprite,y:this.bodySprite.y-4,duration:1200,yoyo:true,repeat:-1,ease:'Sine.easeInOut'});
+ }
+ initMission(index){
+  if(!this.stage||!this.player)return;
+  this.tweens.killTweensOf(this.player);
+  this.stage.removeAll(true);this.missionOverlay.setText('');
+  this.originX=205;this.originY=328;
+  this.tileDist=index===2?101:135;
+  this.player.setPosition(this.originX,this.originY).setScale(1).setAngle(0);
+  this.bodySprite.setFlipX(false);
+  this.addWorld(index);
+ }
+ addWorld(index){
+  const steps=MISSIONS[index].steps||3;
+  const targetX=this.originX+(index===2?4:3)*this.tileDist;
+  const baseY=this.originY-42;
+  // Keep illustration unobstructed: use small illuminated waypoints, not large solid tiles.
+  if(index!==0){
+   for(let j=1;j<=steps;j++){
+    const x=this.originX+j*this.tileDist;
+    const marker=this.add.circle(x,this.originY-5,9,j===steps?0x7bffed:0xffe4a1,.36)
+      .setStrokeStyle(2,j===steps?0xa7fff1:0xffe4a1,.65);
+    this.stage.add(marker);
+    this.tweens.add({targets:marker,alpha:{from:.45,to:.95},duration:700+j*80,yoyo:true,repeat:-1});
+   }
+  }
+  const symbol=index===0?'✦ SIGNAL TOWER':index===1?'💎 CRYSTAL PATH':'✦ BRIDGE OF LOOPS';
+  const sign=this.add.text(390,433,symbol,{
+   fontFamily:'Arial',fontSize:'18px',fontStyle:'bold',color:'#ffedba',
+   backgroundColor:'#0b2850cc',padding:{x:12,y:6},stroke:'#0a2149',strokeThickness:3
+  }).setOrigin(.5);
+  this.stage.add(sign);
+  if(index===0){
+   const beacon=this.add.circle(635,150,20,0x7dfcff,.28).setStrokeStyle(3,0xc2ffff,.65);
+   this.stage.add(beacon);
+   this.tweens.add({targets:beacon,scaleX:1.28,scaleY:1.28,alpha:{from:.35,to:.8},duration:1000,yoyo:true,repeat:-1});
+  }
+ }
+ async celebrate(message){
+  this.missionOverlay.setText(message);
+  for(let i=0;i<20;i++){
+   const p=this.add.circle(this.player.x+(Math.random()-.5)*135,this.player.y-65+(Math.random()-.5)*115,
+      3+Math.random()*6,i%3===0?0xffe08d:i%2===0?0x98ffde:0xffffff);
+   this.tweens.add({targets:p,y:p.y-60,alpha:0,duration:850+Math.random()*300,
+    delay:Math.random()*120,onComplete:()=>p.destroy()});
+  }
+  await new Promise(resolve=>this.tweens.add({targets:this.player,scaleX:1.15,scaleY:1.15,
+    duration:190,yoyo:true,repeat:2,onComplete:()=>{this.player.setScale(1);resolve()}}));
+ }
+ async animateCommands(commands,expected){
+  let steps=0;
+  for(const cmd of commands){
+   if(cmd==='forward'){
+    if(steps>=expected)return {success:false,reason:'Too many moves! Try exactly '+expected+' forward steps.'};
+    steps++;
+    const dest=this.originX+steps*this.tileDist;
+    await new Promise(resolve=>this.tweens.add({targets:this.player,x:dest,duration:390,
+      ease:'Sine.easeInOut',onComplete:resolve}));
+   }else if(cmd==='left'||cmd==='right'){
+    this.bodySprite.setFlipX(cmd==='left');
+    await new Promise(resolve=>this.tweens.add({targets:this.player,scaleX:1.1,scaleY:.95,
+      duration:160,yoyo:true,onComplete:()=>{this.player.setScale(1);resolve()}}));
+   }
+  }
+  if(steps===expected){await this.celebrate('CRYSTAL RESTORED!');return {success:true}}
+  return {success:false,reason:'Your RoboKnight moved '+steps+' of '+expected+' required spaces.'}
+ }
 }
 if(typeof Phaser==='undefined'){consoleOut('Game engine failed to load. Check network access to the Phaser CDN. You can still complete the print() mission.','bad');setStatus('Game assets unavailable on this network.')}else new Phaser.Game({type:Phaser.AUTO,parent:'game',width:800,height:470,backgroundColor:'#25445a',scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},scene:[KnightScene],render:{pixelArt:false,antialias:true}});
 const directMission=new URLSearchParams(location.search).get('mission');
