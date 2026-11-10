@@ -31,12 +31,13 @@ editorEl.value=codeFor(0);
   $('#editor').dataset.enhancement='native-fallback';
  }catch(e){console.info('CodeMirror CDN unavailable; native coding editor active.',e)}
 })();
-function updateXP(){const xp=MISSIONS.reduce((n,m,i)=>n+(progress['won'+i]?m.xp:0),0);$('#xp').textContent='✦ '+xp+' XP';$('#progressInfo').textContent=MISSIONS.filter((m,i)=>progress['won'+i]).length+' / '+MISSIONS.length+' missions completed'}
-function loadMission(i){if(running)return;current=(i+MISSIONS.length)%MISSIONS.length;const m=MISSIONS[current];$('#missionTitle').textContent=m.title;$('#missionStory').textContent=m.story;$('#missionCount').textContent=(current+1)+' / '+MISSIONS.length;$('#missionBadge').textContent='MISSION '+String(current+1).padStart(2,'0');$('#lessonTitle').textContent=m.topic;$('#lessonText').textContent=m.lesson;$('#lessonExample').textContent=m.example;$('#objectiveText').textContent=m.objective;$('#hintText').textContent=m.hint;$('#hintText').hidden=true;$('#hintBtn').textContent='✧ Show a hint';editorEl.value=codeFor(current);setStatus('Your RoboKnight is ready.');consoleOut('Write your Python, then tap ▶ Run Python.');$('#nextMission').disabled=!progress['won'+current]||current===MISSIONS.length-1;updateXP();if(scene)scene.initMission(current)}
-window.RoboKnightGame={selectMission:(i)=>loadMission(i),getCurrentMission:()=>current};
+function updateXP(){const xp=MISSIONS.reduce((n,m,i)=>n+(progress['won'+i]?m.xp:0),0);$('#xp').textContent='✦ '+xp+' XP';$('#progressInfo').textContent=MISSIONS.filter((m,i)=>progress['won'+i]).length+' / '+MISSIONS.length+' missions completed'; const crystal=$('#crystalCount');if(crystal)crystal.textContent='💎 '+MISSIONS.filter((m,i)=>progress['won'+i]).length+' / '+MISSIONS.length}
+function canOpenMission(i){return i===0||!!progress['won'+(i-1)]}
+function loadMission(i){if(running)return false;if(!Number.isInteger(i)||i<0||i>=MISSIONS.length)return false;if(!canOpenMission(i)){consoleOut('This mission is locked. Complete the previous mission first.','bad');return false;}current=i;const m=MISSIONS[current];$('#missionTitle').textContent=m.title;$('#missionStory').textContent=m.story;$('#missionCount').textContent=(current+1)+' / '+MISSIONS.length;$('#missionBadge').textContent='MISSION '+String(current+1).padStart(2,'0');$('#lessonTitle').textContent=m.topic;$('#lessonText').textContent=m.lesson;$('#lessonExample').textContent=m.example;$('#objectiveText').textContent=m.objective;$('#hintText').textContent=m.hint;$('#hintText').hidden=true;$('#hintBtn').textContent='✧ Show a hint';editorEl.value=codeFor(current);setStatus('Your RoboKnight is ready.');consoleOut('Write your Python, then tap ▶ Run Python.');$('#nextMission').disabled=!progress['won'+current]||current===MISSIONS.length-1;$('#prev').disabled=current===0;$('#next').disabled=current===MISSIONS.length-1||!canOpenMission(current+1);updateXP();if(scene)scene.initMission(current);return true}
+window.RoboKnightGame={selectMission:(i)=>loadMission(i),getCurrentMission:()=>current,canOpenMission,progress:()=>({...progress})};
 $('#prev').onclick=()=>loadMission(current-1);
 $('#next').onclick=()=>loadMission(current+1);
-$('#nextMission').onclick=()=>loadMission(current+1);
+$('#nextMission').onclick=()=>{if(loadMission(current+1))document.querySelector('#coding-workbench')?.scrollIntoView({block:'start',behavior:'smooth'})};
 $('#hintBtn').onclick=()=>{const a=$('#hintText');a.hidden=!a.hidden;$('#hintBtn').textContent=a.hidden?'✧ Show a hint':'✧ Hide hint'};
 $('#restore').onclick=()=>{editorEl.value=MISSIONS[current].starter;progress['code'+current]=editorEl.value;store();consoleOut('Starter code restored.')};
 $('#resetProgress').onclick=()=>{if(confirm('Clear saved mission progress and code on this device?')){progress={};store();loadMission(0)}};
@@ -50,7 +51,7 @@ if(m.kind==='print'){if(msg.output.includes('Wake up, RoboKnight!')){if(scene)aw
 const commands=Array.from(msg.commands||[]);if(commands.length>120){consoleOut('Too many robot commands.','bad');return}
 const result=await scene.animateCommands(commands,m.steps);
 if(result.success){if(m.kind==='loop'&&!/\bfor\b|\bwhile\b/.test(editor.state.doc.toString())){consoleOut('You crossed, but this mission asks you to use a Python loop. Try a for loop!','bad');setStatus('A loop is needed to earn the crystal.');return}complete('Great code! Your RoboKnight reached the target.\n\n'+(msg.output||'All commands executed.'))}else{consoleOut(result.reason+'\n\nYour Python ran successfully. Try adjusting the instructions.\n'+msg.output,'bad');setStatus('Try debugging your commands.')}}
-function complete(text){const wasWon=!!progress['won'+current];progress['won'+current]=true;store();updateXP();window.dispatchEvent(new CustomEvent('roboknight:completed',{detail:{index:current,first:!wasWon}}));$('#nextMission').disabled=current===MISSIONS.length-1;consoleOut(text+(wasWon?'':'\n\n✦ New XP earned!'),'good');setStatus('★ Mission complete! Outstanding coding!')}
+function complete(text){const wasWon=!!progress['won'+current];progress['won'+current]=true;store();updateXP();$('#next').disabled=current===MISSIONS.length-1;window.dispatchEvent(new CustomEvent('roboknight:completed',{detail:{index:current,first:!wasWon}}));$('#nextMission').disabled=current===MISSIONS.length-1;consoleOut(text+(wasWon?'':'\n\n✦ New XP earned!'),'good');setStatus('★ Mission complete! Outstanding coding!')}
 class KnightScene extends (window.Phaser?.Scene || class {}){
 constructor(){super('KnightScene')}
 preload(){this.load.svg('academyArt','./assets/academy.svg',{width:960,height:560});this.load.svg('knightArt','./assets/knight.svg',{width:192,height:240})}
@@ -67,5 +68,5 @@ async animateCommands(commands,expected){let moved=0;for(const cmd of commands){
 if(typeof Phaser==='undefined'){consoleOut('Game engine failed to load. Check network access to the Phaser CDN. You can still complete the print() mission.','bad');setStatus('Game assets unavailable on this network.')}else new Phaser.Game({type:Phaser.AUTO,parent:'game',width:800,height:470,backgroundColor:'#25445a',scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},scene:[KnightScene],render:{pixelArt:false,antialias:true}});
 const directMission=new URLSearchParams(location.search).get('mission');
 const parsedMission=directMission===null?0:Number(directMission);
-loadMission(Number.isInteger(parsedMission)&&parsedMission>=0&&parsedMission<MISSIONS.length?parsedMission:0);
+loadMission(Number.isInteger(parsedMission)&&parsedMission>=0&&parsedMission<MISSIONS.length&&canOpenMission(parsedMission)?parsedMission:0);
 startWorker();
