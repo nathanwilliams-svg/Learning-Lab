@@ -16,6 +16,27 @@ if(kind==='victory'){view.innerHTML='<section class="quest-victory"><div class="
 if(kind==='profile'){const p=get(),earned=titles.filter((_,i)=>p['won'+i]).length,total=xp.reduce((a,b,i)=>a+(p['won'+i]?b:0),0);view.innerHTML='<section class="quest-awards quest-profile"><div class="quest-head"><div class="quest-ribbon">PLAYER PROFILE</div><h2>RoboCoder</h2><p>Novice RoboKnight · Your adventure continues!</p></div><div class="quest-profile-content"><img src="./assets/knight.svg" alt="RoboKnight hero"><div><h3>⭐ '+total+' XP</h3><p>💎 '+earned+' / 3 Code Crystals</p><p>✅ '+earned+' missions completed</p><p>🏆 '+earned+' / 4 achievements earned</p><p>Progress is saved on this device.</p></div></div><button class="quest-btn blue" data-go="title">← Main menu</button></section>'}
 if(kind==='awards'){const p=get(),n=titles.filter((_,i)=>p['won'+i]).length;const labels=[['🛡','First Steps',!!p.won0],['💎','Crystal Collector',!!p.won1],['🔁','Loop Master',!!p.won2],['🏆','Academy Graduate',n===3]];view.innerHTML='<section class="quest-awards"><div class="quest-head"><div class="quest-ribbon">KNIGHT’S HALL</div><h2>🏆 Achievements</h2><p>Earn badges by solving Python missions.</p></div><div class="quest-badges">'+labels.map(a=>'<div class="quest-badge '+(a[2]?'earned':'locked')+'"><div>'+a[0]+'</div><strong>'+a[1]+'</strong><small>'+(a[2]?'UNLOCKED':'LOCKED')+'</small></div>').join('')+'</div><button class="quest-btn blue" data-go="title">← Main menu</button></section>'}
 if(kind==='help'){view.innerHTML='<section class="quest-awards"><div class="quest-head"><div class="quest-ribbon">WELCOME, APPRENTICE</div><h2>How to Play</h2></div><div class="quest-help"><p>📖 Read the short Python lesson.</p><p>⌨️ Type real Python or tap the quick commands.</p><p>▶ Run your code to control RoboKnight.</p><p>🔧 Debug your mistakes using the feedback.</p><p>💎 Earn crystals and XP for completing missions.</p></div><button class="quest-btn blue" data-go="title">← Main menu</button></section>'}
+ syncStartHotspot();
+}
+
+// Apply the art hotspot INLINE. This avoids conflicting rules and cached CSS
+// leaving a second bright green HTML button visible on top of the painted one.
+function syncStartHotspot(){
+ const a=view.querySelector('.quest-illustrated-launch');
+ if(!a)return;
+ const artActive=root.classList.contains('art-briefing-ready')&&root.dataset.view==='brief'&&root.dataset.mission==='0';
+ if(!artActive)return; // other missions keep a visible and accessible Start control
+ const parent=a.parentElement;
+ for(const [prop,value] of Object.entries({position:'absolute',inset:'0',display:'block',padding:'0','pointer-events':'none','z-index':'35'}))parent.style.setProperty(prop,value,'important');
+ const style={
+  position:'absolute',left:'30%',top:'76%',width:'42%',height:'19%',
+  display:'block',padding:'0',margin:'0',border:'0',background:'transparent',
+  'background-image':'none','box-shadow':'none','text-shadow':'none',
+  opacity:'0',color:'transparent','font-size':'0','line-height':'0',
+  'min-height':'0','pointer-events':'auto','touch-action':'manipulation',
+  'z-index':'50','text-decoration':'none',cursor:'pointer'
+ };
+ for(const [prop,value] of Object.entries(style))a.style.setProperty(prop,value,'important');
 }
 view.addEventListener('click',e=>{const mission=e.target.closest('[data-mission]');if(mission&&!mission.disabled){selected=Number(mission.dataset.mission);paint('brief');return}const b=e.target.closest('[data-go]');if(!b)return;const dest=b.dataset.go;if(dest==='continue'){if(selected<2){selected++;paint('brief')}else paint('awards')}else paint(dest)});
 document.getElementById('questClose').onclick=()=>{root.hidden=true};
@@ -47,7 +68,7 @@ for(const name of artNames){
  const img=new Image();
  const file=new URL(name+'.webp',artBase);
  file.searchParams.set('v','20261109-2');
- img.onload=()=>{loaded.add(name);root.classList.add('art-'+name+'-ready');reportArtwork();};
+ img.onload=()=>{loaded.add(name);root.classList.add('art-'+name+'-ready');reportArtwork();syncStartHotspot();};
  img.onerror=()=>{failed.add(name);console.error('RoboKnight image failed to load:',file.href);reportArtwork();};
  img.src=file.href;
 }
