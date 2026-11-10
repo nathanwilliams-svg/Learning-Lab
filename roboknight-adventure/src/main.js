@@ -53,7 +53,7 @@ function complete(text){const wasWon=!!progress['won'+current];progress['won'+cu
 class KnightScene extends Phaser.Scene{
 constructor(){super('KnightScene')}
 preload(){this.load.svg('academyArt','./assets/academy.svg',{width:960,height:560});this.load.svg('knightArt','./assets/knight.svg',{width:192,height:240})}
-create(){scene=this;this.add.rectangle(400,235,800,470,0x29566b);if(this.textures.exists('academyArt'))this.add.image(400,235,'academyArt').setDisplaySize(800,470);for(let y=0;y<470;y+=40)for(let x=0;x<800;x+=40)this.add.rectangle(x+20,y+20,38,38,((x+y)/40)%2===0?0x447c70:0x3d756a).setAlpha(.62);
+create(){scene=this;this.add.rectangle(400,235,800,470,0x29566b);if(this.textures.exists('academyArt'))this.add.image(400,235,'academyArt').setDisplaySize(800,470);// Foreground uses the illustrated academy SVG, not a placeholder tile grid.
 // Illustrated background replaces placeholder triangle trees.
 this.stage=this.add.container(0,0);this.createKnight();this.missionOverlay=this.add.text(400,25,'',{fontFamily:'Arial',fontSize:'22px',fontStyle:'bold',color:'#fff8dd',stroke:'#1a3151',strokeThickness:5}).setOrigin(.5).setDepth(12);this.initMission(current)}
 createKnight(){this.player=this.add.container(0,0).setDepth(8);if(this.textures.exists('knightArt')){this.player.add(this.add.image(0,-20,'knightArt').setDisplaySize(118,146));}else{this.player.add(this.add.rectangle(0,-20,60,90,0xeeeeee));this.player.add(this.add.text(0,-30,'N',{fontSize:'26px',color:'#c33a4e'}).setOrigin(.5));}}
