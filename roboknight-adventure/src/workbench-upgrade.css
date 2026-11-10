@@ -1,0 +1,62 @@
+
+/* Nipher RoboKnight gameplay workbench — separate from illustrated menu hotspots. */
+:root{--rk-gold:#f6d28c;--rk-cobalt:#123e78;--rk-navy:#0a2448;--rk-ice:#a9dfff}
+body{background:radial-gradient(ellipse at 50% -8%,#4471aa 0,#13365b 35%,#07182e 90%)!important}
+.shell{max-width:1600px!important}
+.topbar{border:3px solid #86c8ff!important;border-radius:17px!important;background:linear-gradient(#113a70,#081f45)!important;box-shadow:0 5px 0 #062344,0 9px 22px #021020!important;padding:9px 22px!important}
+.topbar .emblem{background:linear-gradient(140deg,#ec6670,#90102e)!important;border:2px solid #fbe4ad;box-shadow:0 3px 0 #4e1730}
+.topbar .brand strong{color:#fff!important;text-shadow:1px 2px #092047;font-weight:1000;letter-spacing:1.1px}
+.topbar .brand strong span{color:#ffb8bc}
+.topbar .xp{background:#102e58;border:2px solid #ccddfb;border-radius:14px;padding:9px 15px;text-shadow:0 2px #142847}
+.quest-quicknav{padding:10px 0 16px!important;justify-content:flex-start!important;flex-wrap:wrap}
+.quest-quicknav button{background:linear-gradient(#3ca8f7,#1765b9 52%,#103e81)!important;border:2px solid #afd8ff!important;border-radius:11px!important;box-shadow:0 4px #062147,0 6px 13px #0616298c;color:#fff!important;padding:10px 15px!important;font-size:13px!important;min-height:43px}
+.dashboard{grid-template-columns:minmax(0,1.12fr) minmax(360px,1fr)!important;gap:13px!important;align-items:start}
+.world,.codepanel{border:4px solid #78baf4!important;border-radius:17px!important;box-shadow:0 0 0 2px #12335c,0 6px 0 #082448,0 16px 32px #031127bd!important}
+.world{background:linear-gradient(150deg,#17396d 0,#10254d 58%,#071d3e 100%)!important;padding:14px!important}
+.world-top{background:linear-gradient(#21528e,#103362);border:2px solid #518fc8;border-radius:11px;padding:13px;margin-bottom:12px}
+.world h1{font-size:clamp(22px,2.3vw,31px)!important;color:#ffebba!important;text-shadow:0 3px #082348!important;line-height:1.15}
+.world-top p{font-size:14px!important;color:#deefff!important;max-width:680px}
+.world .eyebrow,.codepanel .eyebrow{color:#ffd37d!important;font-size:11px!important}
+.levelnav button{background:linear-gradient(#53a9f2,#174f9d)!important;border:2px solid #c2e6ff!important;width:42px!important;height:42px!important;font-weight:900;box-shadow:0 3px #071b43}
+.levelnav button:disabled{filter:grayscale(.8);opacity:.4}
+.levelnav span{color:#ffebbf;font-weight:900}
+.game-stage{position:relative;background:#235c81!important;border:3px solid #fff4ce!important;border-radius:14px!important;box-shadow:inset 0 0 0 4px #1a4875,0 5px 14px #061329d1!important;overflow:hidden}
+.game-stage:before{content:"KNIGHT ACADEMY";position:absolute;left:11px;top:10px;background:#092d58dd;color:#ffecb3;border:1px solid #d5ae64;border-radius:8px;padding:5px 9px;font-size:10px;letter-spacing:1.2px;font-weight:900;z-index:3;pointer-events:none}
+.game-stage canvas{position:relative;z-index:1}
+.statusline{padding:7px 9px;border-radius:8px;background:#0e2f54;color:#bdf3d2!important;font-weight:750;min-height:36px}
+.objective{background:linear-gradient(120deg,#fff4d7,#f2d49d)!important;border:3px solid #b88938!important;color:#233450!important;box-shadow:0 4px #7b5e32!important}
+.objective strong{color:#915223!important;font-size:13px!important}
+.objective p{font-size:15px!important;font-weight:750!important}
+.objective-icon{color:#d44a43!important}
+.hint{background:#13345b;border:1px solid #5a9acf;padding:9px 14px;border-radius:10px;min-height:47px}
+.hintbtn{color:#ffecbd!important;font-weight:900!important;min-height:27px}
+.hint p{color:#e9f6ff!important;line-height:1.55}
+.codepanel{background:linear-gradient(155deg,#143d78,#09264f 62%,#071d40)!important;padding:15px!important}
+.lesson-head{background:linear-gradient(#173f77,#0d315d);border:2px solid #4c87c5;border-radius:12px;padding:12px 15px}
+.lesson-head h2{font-size:clamp(23px,2.1vw,31px)!important;color:#fff0c5!important;text-shadow:0 2px #0b2344}
+.lesson-head p{color:#e2f2ff!important;font-size:14px!important;line-height:1.55!important}
+.example{background:linear-gradient(#fff6e0,#e8c891)!important;border:3px solid #d9a757!important;border-radius:12px!important;padding:11px 15px!important;box-shadow:0 3px #7f5934}
+.example strong{color:#92472a!important}
+.example pre{background:#0e2d56;border-radius:9px;color:#afffc2!important;padding:9px 11px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px!important}
+.editor-head,.console-title{background:linear-gradient(#1870c0,#0d3c7b);border:1px solid #79c1fa;padding:9px 12px;border-radius:10px;color:white!important;letter-spacing:.8px!important}
+.editor{border:3px solid #66b8f5!important;border-radius:12px!important;box-shadow:inset 0 0 0 2px #031c3d}
+.fallback-editor{min-height:205px!important;background:#071933!important;color:#b8f9dc!important;font-size:15px!important;line-height:1.8!important;caret-color:#ffd88e!important}
+.fallback-editor:focus{outline:3px solid #ffd978;outline-offset:-4px}
+.runtime{color:#ffe098!important;font-size:11px!important}
+.runtime.ready{color:#aaffcd!important}
+.chips{padding:9px 8px;background:#0c305e;border:1px solid #326d9e;border-radius:10px}
+.chips span{color:#f7e5bf!important;font-size:11px!important;font-weight:900}
+.chips button{min-height:42px!important;border:2px solid #9ad8fa!important;background:linear-gradient(#285f9f,#103668)!important;color:#fff!important;border-radius:8px!important;font-size:12px!important;font-weight:800;box-shadow:0 3px #031831}
+.actions button{font-size:14px!important;border-radius:11px!important;min-height:51px;box-shadow:0 4px 0 #041b35!important;border:2px solid #d4ebff!important}
+.actions .run{background:linear-gradient(#66fca0,#10b94d 54%,#087734)!important;color:#fff!important;text-shadow:0 1px #125531}
+.actions .stop{background:linear-gradient(#ed8792,#9d3349)!important;color:white!important}
+.actions .restore{background:linear-gradient(#57a9e9,#16599c)!important;color:white!important}
+.actions button:active,.chips button:active{transform:translateY(2px);box-shadow:0 1px #05172c!important}
+.console{border:2px solid #4385ba!important;background:#06182f!important;color:#c4edff!important;min-height:110px!important;line-height:1.7!important;font-size:13px!important}
+.footer-panel{padding:10px;background:#103764;border-radius:10px;border:1px solid #538bb6;color:#fff!important}
+.footer-panel button{background:linear-gradient(#ffdd90,#e3a43e)!important;border:2px solid #fff3c8!important;color:#3d2a15!important;box-shadow:0 3px #79522f;min-height:44px;font-weight:1000}
+#crystalCount{font-weight:1000;color:#b0efff;display:inline-block;padding:7px 11px;background:#10325b;border:1px solid #5b9dd4;border-radius:10px}
+.run-guide{background:#154779;border:1px solid #7db9e4;color:#eff8ff;font-weight:700;border-radius:9px;padding:9px 13px;font-size:12px;line-height:1.45}
+@media(max-width:1000px){.dashboard{grid-template-columns:1fr!important}.world,.codepanel{max-width:100%}.game-stage{height:min(57vw,440px)!important;min-height:280px!important}}
+@media(max-width:520px){.world,.codepanel{padding:9px!important}.world-top{padding:9px}.game-stage{min-height:250px!important}.topbar{padding:8px!important}.actions button{min-height:46px!important;padding:9px!important}.dashboard{gap:10px!important}}
+@media(prefers-reduced-motion:reduce){.actions button,.chips button{transition:none!important}}
