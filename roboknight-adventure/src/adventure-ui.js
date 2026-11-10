@@ -17,7 +17,29 @@ if(kind==='profile'){const p=get(),earned=titles.filter((_,i)=>p['won'+i]).lengt
 if(kind==='awards'){const p=get(),n=titles.filter((_,i)=>p['won'+i]).length;const labels=[['🛡','First Steps',!!p.won0],['💎','Crystal Collector',!!p.won1],['🔁','Loop Master',!!p.won2],['🏆','Academy Graduate',n===3]];view.innerHTML='<section class="quest-awards"><div class="quest-head"><div class="quest-ribbon">KNIGHT’S HALL</div><h2>🏆 Achievements</h2><p>Earn badges by solving Python missions.</p></div><div class="quest-badges">'+labels.map(a=>'<div class="quest-badge '+(a[2]?'earned':'locked')+'"><div>'+a[0]+'</div><strong>'+a[1]+'</strong><small>'+(a[2]?'UNLOCKED':'LOCKED')+'</small></div>').join('')+'</div><button class="quest-btn blue" data-go="title">← Main menu</button></section>'}
 if(kind==='help'){view.innerHTML='<section class="quest-awards"><div class="quest-head"><div class="quest-ribbon">WELCOME, APPRENTICE</div><h2>How to Play</h2></div><div class="quest-help"><p>📖 Read the short Python lesson.</p><p>⌨️ Type real Python or tap the quick commands.</p><p>▶ Run your code to control RoboKnight.</p><p>🔧 Debug your mistakes using the feedback.</p><p>💎 Earn crystals and XP for completing missions.</p></div><button class="quest-btn blue" data-go="title">← Main menu</button></section>'}
 }
-view.addEventListener('click',e=>{const mission=e.target.closest('[data-mission]');if(mission&&!mission.disabled){selected=Number(mission.dataset.mission);paint('brief');return}const b=e.target.closest('[data-go]');if(!b)return;const dest=b.dataset.go;if(dest==='start'){if(typeof window.RoboKnightGame?.selectMission==='function'){window.RoboKnightGame.selectMission(selected);root.hidden=true}else alert('The Python game is still loading. Please refresh and try again.')}else if(dest==='continue'){if(selected<2){selected++;paint('brief')}else paint('awards')}else paint(dest)});
+function startSelectedMission(){
+ const game=window.RoboKnightGame;
+ if(typeof game?.selectMission!=='function'){
+  const msg='The Python coding area has not loaded. Check that the game has finished loading and try refreshing the page.';
+  console.error('RoboKnight mission unavailable: game controller missing');
+  alert(msg);return;
+ }
+ try{game.selectMission(selected);root.hidden=true;
+  const workbench=document.querySelector('.dashboard');
+  if(workbench)workbench.scrollIntoView({behavior:'smooth',block:'start'});
+ }catch(err){console.error('RoboKnight could not start mission',err);alert('The mission could not start. Please refresh the page and try again.')}
+}
+// The illustrated briefing is a single picture, not native UI elements.
+// Support taps on its painted Start Mission control even when screen scaling shifts the hotspot.
+view.addEventListener('click',e=>{
+ if(root.dataset.view!=='brief'||!root.classList.contains('art-briefing-ready')||root.dataset.mission!=='0')return;
+ if(e.target.closest('button'))return;
+ const rect=view.querySelector('.quest-brief')?.getBoundingClientRect();
+ if(!rect)return;
+ const x=(e.clientX-rect.left)/rect.width,y=(e.clientY-rect.top)/rect.height;
+ if(x>=.24&&x<=.78&&y>=.69&&y<=.98){startSelectedMission()}
+});
+view.addEventListener('click',e=>{const mission=e.target.closest('[data-mission]');if(mission&&!mission.disabled){selected=Number(mission.dataset.mission);paint('brief');return}const b=e.target.closest('[data-go]');if(!b)return;const dest=b.dataset.go;if(dest==='start'){startSelectedMission()}else if(dest==='continue'){if(selected<2){selected++;paint('brief')}else paint('awards')}else paint(dest)});
 document.getElementById('questClose').onclick=()=>{root.hidden=true};
 const nav=document.createElement('div');nav.className='quest-quicknav';nav.innerHTML='<button id="questOpenMap">🗺️ World Map</button><button id="questOpenAwards">🏆 Achievements</button>';
 document.querySelector('.topbar')?.after(nav);
