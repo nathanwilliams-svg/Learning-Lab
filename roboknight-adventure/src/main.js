@@ -113,7 +113,7 @@ class KnightScene extends (window.Phaser?.Scene || class {}){
   this.originX=205;this.originY=328;
   this.tileDist=index===2?101:135;
   this.player.setPosition(this.originX,this.originY).setScale(1).setAngle(0);
-  this.bodySprite.setFlipX(false);
+  if(typeof this.bodySprite.setFlipX==='function')this.bodySprite.setFlipX(false);
   this.addWorld(index);
  }
  addWorld(index){
@@ -163,7 +163,7 @@ class KnightScene extends (window.Phaser?.Scene || class {}){
     await new Promise(resolve=>this.tweens.add({targets:this.player,x:dest,duration:390,
       ease:'Sine.easeInOut',onComplete:resolve}));
    }else if(cmd==='left'||cmd==='right'){
-    this.bodySprite.setFlipX(cmd==='left');
+    if(typeof this.bodySprite.setFlipX==='function')this.bodySprite.setFlipX(cmd==='left');
     await new Promise(resolve=>this.tweens.add({targets:this.player,scaleX:1.1,scaleY:.95,
       duration:160,yoyo:true,onComplete:()=>{this.player.setScale(1);resolve()}}));
    }
