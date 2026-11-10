@@ -1,0 +1,3 @@
+Upload all six .webp files into this GitHub folder: roboknight-adventure/assets/illustrated/
+Do not upload the ZIP itself. Each image is ready for website use.
+The game will detect these files and enable the illustrated title, map, first briefing, victory and achievements screens automatically.
