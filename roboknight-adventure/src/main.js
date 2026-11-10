@@ -11,7 +11,7 @@ const setStatus=s=>$('#gameStatus').textContent=s;
 const codeFor=i=>progress['code'+i]??MISSIONS[i].starter;
 // Start with a native editor so the game remains usable if an external editor CDN is blocked.
 const editorEl=document.createElement('textarea');editorEl.className='fallback-editor';editorEl.setAttribute('aria-label','Python code editor');editorEl.spellcheck=false;$('#editor').append(editorEl);
-const editor={
+editor={
  get state(){return {doc:{length:editorEl.value.length,toString:()=>editorEl.value},selection:{main:{from:editorEl.selectionStart,to:editorEl.selectionEnd}}}},
  dispatch({changes,selection}){if(changes){editorEl.setRangeText(changes.insert,changes.from,changes.to,'end');if(selection)editorEl.setSelectionRange(selection.anchor,selection.anchor);editorEl.dispatchEvent(new Event('input'))}},
  focus(){editorEl.focus()}
