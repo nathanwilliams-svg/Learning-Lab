@@ -27,7 +27,7 @@ window.addEventListener('roboknight:completed',e=>{selected=e.detail.index;lastR
 // Load images independently so a missing file never blocks every illustrated screen.
 // Absolute URLs avoid path differences between GitHub Pages and local development.
 const artNames=['title','map','briefing','victory','achievements'];
-const artBase=new URL('./assets/illustrated/',document.currentScript?.src||document.baseURI);
+const artBase=new URL('../assets/illustrated/',document.currentScript?.src||new URL('./src/adventure-ui.js',document.baseURI));
 const artStatus=document.createElement('div');
 artStatus.id='questArtStatus';
 artStatus.setAttribute('role','status');
