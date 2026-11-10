@@ -24,10 +24,33 @@ document.querySelector('.topbar')?.after(nav);
 document.getElementById('questOpenMap').onclick=()=>paint('map');
 document.getElementById('questOpenAwards').onclick=()=>paint('awards');
 window.addEventListener('roboknight:completed',e=>{selected=e.detail.index;lastReward=e.detail.first?xp[selected]:0;setTimeout(()=>paint('victory'),650)});
-// Switch to the new high-resolution art only after all screen backgrounds are present.
+// Load images independently so a missing file never blocks every illustrated screen.
+// Absolute URLs avoid path differences between GitHub Pages and local development.
 const artNames=['title','map','briefing','victory','achievements'];
-Promise.all(artNames.map(name=>new Promise((resolve,reject)=>{const img=new Image();img.onload=resolve;img.onerror=reject;img.src='./assets/illustrated/'+name+'.webp'})))
- .then(()=>{root.classList.add('quest-art-ready');console.info('RoboKnight illustrated art pack ready')})
- .catch(()=>console.info('Illustrated art pack not uploaded yet; retaining functional fallback screens.'));
+const artBase=new URL('./assets/illustrated/',document.currentScript?.src||document.baseURI);
+const artStatus=document.createElement('div');
+artStatus.id='questArtStatus';
+artStatus.setAttribute('role','status');
+artStatus.className='quest-art-status';
+artStatus.textContent='Loading illustrated game artwork…';
+root.querySelector('.quest-top').append(artStatus);
+const loaded=new Set(),failed=new Set();
+function reportArtwork(){
+ const count=loaded.size+failed.size;
+ artStatus.textContent=count===artNames.length
+  ? failed.size ? 'Art loading issue: '+[...failed].join(', ') : 'Illustrated art ready ✓'
+  : 'Loading illustrated art '+count+'/'+artNames.length+'…';
+ artStatus.classList.toggle('error',failed.size>0);
+ if(count===artNames.length&&!failed.size){setTimeout(()=>{artStatus.hidden=true},2800)}
+}
+for(const name of artNames){
+ const img=new Image();
+ const file=new URL(name+'.webp',artBase);
+ file.searchParams.set('v','20261109-2');
+ img.onload=()=>{loaded.add(name);root.classList.add('art-'+name+'-ready');reportArtwork();};
+ img.onerror=()=>{failed.add(name);console.error('RoboKnight image failed to load:',file.href);reportArtwork();};
+ img.src=file.href;
+}
+reportArtwork();
 window.RoboKnightMenus={open:paint};paint('title');
 })();
