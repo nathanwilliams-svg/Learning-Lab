@@ -53,3 +53,24 @@
 }
 .art-briefing-ready[data-view="brief"][data-mission="0"] .quest-brief-content>.quest-btn:focus-visible{outline:4px solid #fff;outline-offset:3px}
 @media(max-width:600px){.art-briefing-ready[data-view="brief"][data-mission="0"] .quest-brief-content>.quest-btn{min-height:38px;padding:5px;font-size:13px!important;bottom:3%}}
+
+
+/* Mission launch uses one native link laid over the Start Mission printed in the illustration.
+   No extra decorative button is rendered. */
+.art-briefing-ready[data-view="brief"][data-mission="0"] .quest-brief-content{
+ pointer-events:none!important; position:absolute;inset:0;z-index:20;
+}
+.art-briefing-ready[data-view="brief"][data-mission="0"] .quest-brief-content>.quest-start-link{
+ position:absolute!important;display:block!important;
+ left:30%!important;top:75%!important;bottom:auto!important;
+ width:40%!important;height:20%!important;min-height:0!important;
+ padding:0!important;margin:0!important;opacity:0!important;
+ border:0!important;box-shadow:none!important;background:transparent!important;
+ font-size:0!important;text-shadow:none!important;pointer-events:auto!important;
+ cursor:pointer;z-index:40;touch-action:manipulation;
+}
+.art-briefing-ready[data-view="brief"][data-mission="0"] .quest-brief-content>.quest-start-link:focus-visible{
+ opacity:1!important;outline:4px solid #fff370;outline-offset:-5px;
+ background:#013c4388!important;color:transparent!important;
+}
+.quest-start-link{display:flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
