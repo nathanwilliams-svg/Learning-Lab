@@ -1,7 +1,7 @@
 (function(){
 const titles=['The Sleeping Knight','The Crystal Path','The Bridge of Loops'],xp=[50,75,100],key='roboknight-python-quest-v1';
 const get=()=>{try{return JSON.parse(localStorage.getItem(key)||'{}')}catch{return {}}};
-let selected=0;
+let selected=0,lastReward=50;
 const root=document.createElement('div');root.id='questOverlay';root.className='quest-overlay';
 root.innerHTML='<div class="quest-frame"><div class="quest-top"><strong>🛡 NIPHER ROBOKNIGHTS</strong><span id="questStats"></span><button id="questClose" aria-label="Close menu">✕</button></div><div class="quest-view" id="questView"></div></div>';
 document.body.appendChild(root);
@@ -22,6 +22,6 @@ const nav=document.createElement('div');nav.className='quest-quicknav';nav.inner
 document.querySelector('.topbar')?.after(nav);
 document.getElementById('questOpenMap').onclick=()=>paint('map');
 document.getElementById('questOpenAwards').onclick=()=>paint('awards');
-window.addEventListener('roboknight:completed',e=>{selected=e.detail.index;setTimeout(()=>paint('victory'),650)});
+window.addEventListener('roboknight:completed',e=>{selected=e.detail.index;lastReward=e.detail.first?xp[selected]:0;setTimeout(()=>paint('victory'),650)});
 window.RoboKnightMenus={open:paint};paint('title');
 })();
