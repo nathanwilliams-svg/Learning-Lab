@@ -69,3 +69,55 @@
  outline:5px solid #fff96b!important;outline-offset:-5px;opacity:1!important;
  background:#21457655!important;
 }
+
+
+/* Progression polish — only mission navigation and reward/profile surfaces. */
+.quest-mission{transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden}
+.quest-mission:not(:disabled):hover,.quest-mission:not(:disabled):focus-visible{transform:translateY(-3px);box-shadow:0 8px 15px #071329,0 0 0 3px #ffe6a3}
+.quest-mission.won{background:linear-gradient(#337d73,#135544);border-color:#ffe59b}
+.quest-mission:disabled{background:linear-gradient(#303c56,#141f35);border-color:#6a7796;opacity:.85;filter:grayscale(.4)}
+.quest-mission small{color:#e5f6ff!important;font-size:12px!important;font-weight:700}
+.quest-brief{box-shadow:inset 0 0 0 3px #a1d4ff}
+.quest-overlay[data-view="brief"][data-mission="1"] .quest-brief-hero,
+.quest-overlay[data-view="brief"][data-mission="2"] .quest-brief-hero{
+background:linear-gradient(180deg,#0c31636b,#07564244),url('../assets/illustrated/gameplay.webp') 8% 24%/210% auto no-repeat;
+}
+.quest-overlay[data-view="brief"][data-mission="1"] .quest-brief-content,
+.quest-overlay[data-view="brief"][data-mission="2"] .quest-brief-content{
+background:linear-gradient(180deg,#143e75,#0b244c)
+}
+.quest-overlay[data-view="brief"][data-mission="1"] .quest-brief-content .quest-ribbon,
+.quest-overlay[data-view="brief"][data-mission="2"] .quest-brief-content .quest-ribbon{font-size:17px}
+.quest-overlay[data-view="brief"][data-mission="1"] .quest-brief-hero img,
+.quest-overlay[data-view="brief"][data-mission="2"] .quest-brief-hero img{filter:drop-shadow(0 12px 5px #06223ad2)}
+.quest-overlay[data-view="victory"][data-mission="1"] .quest-victory,
+.quest-overlay[data-view="victory"][data-mission="2"] .quest-victory{
+background:radial-gradient(ellipse at 64% 37%,#f3d48c 0,#be734f 18%,#386eae 51%,#12254e 100%)
+}
+.quest-overlay[data-view="victory"] .quest-award .quest-gained{font-size:27px;font-weight:1000}
+.art-victory-ready.quest-replay[data-view="victory"][data-mission="0"] .quest-victory{
+background:radial-gradient(circle at 55% 45%,#fbd995,#b87357 35%,#276ca5 70%,#09264d 100%);
+min-height:620px;aspect-ratio:auto;display:grid;grid-template-columns:40% 60%;padding:25px;
+}
+.art-victory-ready.quest-replay[data-view="victory"][data-mission="0"] .quest-celebrate{display:block}
+.art-victory-ready.quest-replay[data-view="victory"][data-mission="0"] .quest-award{
+position:relative;inset:auto;padding:26px;background:linear-gradient(#fff5d8,#f3d392);
+border:7px ridge #efbd69;border-radius:20px;box-shadow:0 7px #955d34;pointer-events:auto;
+}
+.art-victory-ready.quest-replay[data-view="victory"][data-mission="0"] .quest-award>*{display:block}
+.art-victory-ready.quest-replay[data-view="victory"][data-mission="0"] .quest-award>.quest-btn{
+position:relative;left:auto;top:auto;width:auto;height:auto;opacity:1;
+margin:16px auto;border:3px solid #c1e5fc;pointer-events:auto;
+}
+.art-victory-ready.quest-replay[data-view="victory"][data-mission="0"] .quest-award>.quest-back{display:block}
+.quest-profile-content{background:linear-gradient(130deg,#133c73ed,#092345e8)!important;border:3px solid #b0d9ff!important;box-shadow:0 8px 24px #071629b7}
+.quest-profile-content h3{font-size:25px;color:#ffd87b!important}
+.quest-profile-content p{border-bottom:1px solid #729ec75e;padding:8px 0;line-height:1.45}
+.quest-badges{gap:16px}
+.quest-badge{border-radius:17px!important;box-shadow:0 7px #031b36;transition:transform .15s}
+.quest-badge.earned{background:linear-gradient(#2a72a4,#103968);box-shadow:0 0 20px #ffcd7b6c,0 7px #081a38}
+.quest-badge.earned:hover{transform:translateY(-3px)}
+.quest-badge.locked{opacity:.72!important}
+@media(max-width:790px){
+.art-victory-ready.quest-replay[data-view="victory"][data-mission="0"] .quest-victory{grid-template-columns:1fr;min-height:500px}
+}
